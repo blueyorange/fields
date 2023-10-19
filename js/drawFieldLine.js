@@ -1,32 +1,27 @@
-export default function drawFieldLine(q, position, direction) {
+import Vector from './Vector.js'
+import config from './config.js'
+
+export default function drawFieldLine(charges, position,ctx) {
   var i;
   var insideCanvas = true;
-  var E = new Vector(0, 0);
-  var insideCharge = false;
-
+  const maxIterations = 1000;
+  let it = 0;
+  
   do {
-    (E.x = 0), (E.y = 0);
+    ctx.moveTo(position.x, position.y);
     insideCanvas = !Boolean(
       position.x < 0 ||
-        position.x > canvas.width ||
+        position.x > config.width ||
         position.y < 0 ||
-        position.y > canvas.height
+        position.y > config.height
     );
-    console.log("insideCanvas = " + insideCanvas);
-    ctx.moveTo(position.x, position.y);
 
-    for (i = 0; i < q.length; i++) {
-      E = Vector.add(E, q[i].E(position.x, position.y));
-      insideCharge = Boolean(
-        insideCharge ||
-          Vector.distance(position, q[i].position) < q[i].radius - 19
-      );
-    }
-
+    const E = charges.reduce((total, charge) => Vector.add(total, charge.E(position.x, position.y)),new Vector(0,0))
+    
     E.normalise();
-    position.x = position.x + direction * E.x;
-    position.y = position.y + direction * E.y;
+    position = Vector.add(position, E);
     ctx.lineTo(position.x, position.y);
-  } while (!insideCharge && insideCanvas);
+    it++
+  } while (insideCanvas && it<maxIterations);
   ctx.stroke();
 }

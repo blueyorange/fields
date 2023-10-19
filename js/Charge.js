@@ -1,4 +1,4 @@
-import Vector from "Vector";
+import Vector from "./Vector.js";
 
 export default class Charge {
   constructor(charge, x, y, colour) {
@@ -7,7 +7,7 @@ export default class Charge {
     this.y = y;
     this.radius = 20;
     this.position = new Vector(x, y);
-    this.colour = colour;
+    this.colour = colour || '#000000';
   }
 
   V(x, y) {
@@ -21,7 +21,6 @@ export default class Charge {
   E(x, y) {
     var dx = this.x - x;
     var dy = this.y - y;
-    var angle = Math.atan(dy / dx);
     var r = Math.hypot(dx, dy);
     var E = this.charge / (r * r);
     var Ex = (E * -dx) / r;
@@ -30,7 +29,7 @@ export default class Charge {
     return E;
   }
 
-  draw() {
+  draw(ctx) {
     ctx.beginPath();
     ctx.strokeStyle = this.colour;
     console.log("set pen colour to draw charge" + this.colour);
