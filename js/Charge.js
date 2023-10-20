@@ -7,7 +7,7 @@ export default class Charge {
     this.y = y;
     this.radius = 20;
     this.position = new Vector(x, y);
-    this.colour = colour || '#000000';
+    this.colour = colour || "#000000";
   }
 
   V(x, y) {
