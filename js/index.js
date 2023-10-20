@@ -45,5 +45,6 @@ function drawLine(points) {
   ctx.beginPath();
   ctx.moveTo(x, y);
   points.forEach((point) => ctx.lineTo(point.x, point.y));
+  ctx.lineWidth = 2;
   ctx.stroke();
 }
