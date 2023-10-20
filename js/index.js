@@ -11,9 +11,6 @@ const ctx = canvas.getContext("2d");
 ctx.fillStyle = "rgba(1,1,1,1)";
 const field = new Field();
 
-// array to store charges
-const charges = [];
-
 //report the mouse position on click
 canvas.addEventListener(
   "click",
