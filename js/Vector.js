@@ -30,8 +30,9 @@ export default class Vector {
 
   normalise() {
     if (this.magnitude !== 0) {
-      this.x = this.x / this.magnitude;
-      this.y = this.y / this.magnitude;
-    }
+      const x = this.x / this.magnitude;
+      const y = this.y / this.magnitude;
+      return new Vector(x, y);
+    } else return this;
   }
 }
