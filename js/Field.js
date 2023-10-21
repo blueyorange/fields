@@ -1,5 +1,6 @@
 import Vector from "./Vector.js";
 import config from "./config.js";
+import { getEquallySpacedPointsAroundCircle, thinPoints } from "./helpers.mjs";
 
 export default class Field {
   constructor(charges) {
@@ -62,17 +63,23 @@ export default class Field {
   }
 
   #getStartPoints(charge) {
-    // returns the start points for field lines from one charge
-    const numLines = config.fieldLinesPerCharge * charge.charge;
-    const angle = (2 * Math.PI) / numLines;
-    return Array.from(
-      { length: numLines },
-      (_, i) =>
-        new Vector(
-          charge.position.x + Math.cos(i * angle),
-          charge.position.y + Math.sin(i * angle)
-        )
-    );
+    const n = 32;
+    const angle = (2 * Math.PI) / n;
+    const { x, y } = charge.position;
+    const r = 10;
+    const equallySpacedPoints = Array.from({ length: n }, (_, i) => {
+      return new Vector(
+        x + r * Math.cos(i * angle),
+        y + r * Math.sin(i * angle)
+      );
+    });
+    if (this.charges.length == 1) {
+      return equallySpacedPoints;
+    }
+    const sortedPointsByFieldStrength = equallySpacedPoints.sort((a, b) => {
+      return this.strength(b).magnitude - this.strength(a).magnitude;
+    });
+    return sortedPointsByFieldStrength.slice(0, 28);
   }
 
   fieldLines() {
