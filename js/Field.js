@@ -27,7 +27,7 @@ export default class Field {
     return new Vector(Ex, Ey);
   }
 
-  fieldLine(startPosition) {
+  fieldLine(startPosition, direction) {
     const maxFieldStrength = 1.1 / config.chargeRadius ** 2;
     // returns an array of points constituting the field line
     let position = startPosition;
@@ -48,7 +48,8 @@ export default class Field {
       // calculate the field strength at this point
       E = this.strength(position);
       // make E only one pixel long, to advance one pixel each step
-      const unitVector = E.normalise();
+      // multiply by +1 or -1 depending on charge
+      const unitVector = E.normalise().scale(direction);
       position = Vector.add(position, unitVector);
       iterations++;
       // add new point to array
@@ -65,12 +66,14 @@ export default class Field {
     // get start positions
     const startPositions = this.#getStartPoints(charge);
     // returns an array of arrays containing the field line points
-    const points = startPositions.map((position) => this.fieldLine(position));
+    const points = startPositions.map((position) =>
+      this.fieldLine(position, charge.sign)
+    );
     return points;
   }
 
   #getStartPoints(charge) {
-    const n = 32;
+    const n = config.fieldLinesPerCharge;
     const angle = (2 * Math.PI) / n;
     const { x, y } = charge.position;
     const r = config.chargeRadius;
@@ -86,7 +89,7 @@ export default class Field {
     const sortedPointsByFieldStrength = equallySpacedPoints.sort((a, b) => {
       return this.strength(b).magnitude - this.strength(a).magnitude;
     });
-    return sortedPointsByFieldStrength.slice(0, 16);
+    return sortedPointsByFieldStrength.slice(0, config.fieldLinesPerCharge);
   }
 
   fieldLines() {
