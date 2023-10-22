@@ -1,6 +1,5 @@
 import Vector from "./Vector.js";
 import config from "./config.js";
-import { getEquallySpacedPointsAroundCircle, thinPoints } from "./helpers.mjs";
 
 export default class Field {
   constructor(charges) {
