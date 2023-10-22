@@ -23,8 +23,9 @@ export default class Vector {
   }
 
   scale(factor) {
-    this.x = this.x * factor;
-    this.y = this.y * factor;
+    const x = this.x * factor;
+    const y = this.y * factor;
+    return new Vector(x, y);
   }
 
   static distance(A, B) {
