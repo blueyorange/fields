@@ -3,9 +3,9 @@ import Vector from "./Vector.js";
 export default class Charge {
   constructor(charge, x, y, colour) {
     this.charge = charge;
+    this.sign = charge / Math.abs(charge);
     this.x = x;
     this.y = y;
-    this.radius = 20;
     this.position = new Vector(x, y);
     this.colour = colour || "#000000";
   }
