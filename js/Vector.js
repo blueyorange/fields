@@ -22,6 +22,11 @@ export default class Vector {
     return C;
   }
 
+  scale(factor) {
+    this.x = this.x * factor;
+    this.y = this.y * factor;
+  }
+
   static distance(A, B) {
     return Math.hypot(A.x - B.x, A.y - B.y);
   }
