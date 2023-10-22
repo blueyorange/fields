@@ -9,22 +9,9 @@ export default class Field {
 
   strength(position) {
     return this.charges.reduce(
-      (total, charge) =>
-        Vector.add(total, this.#fieldStrength(charge, position)),
+      (total, charge) => Vector.add(total, charge.field(position)),
       new Vector(0, 0)
     );
-  }
-
-  #fieldStrength(charge, position) {
-    // calculates the field strength for a given charge and position
-    // returns a Vector
-    const dx = position.x - charge.x;
-    const dy = position.y - charge.y;
-    const r = Math.hypot(dx, dy);
-    const mag = charge.charge / (r * r);
-    const Ex = (mag * dx) / r;
-    const Ey = (mag * dy) / r;
-    return new Vector(Ex, Ey);
   }
 
   fieldLine(startPosition, direction) {
@@ -34,7 +21,6 @@ export default class Field {
     const points = [startPosition];
     var insideCanvas = true;
     let iterations = 0;
-    let maxIterations = 100000;
     let E;
     // iterate following E direction to generate points
     do {
@@ -57,7 +43,7 @@ export default class Field {
     } while (
       E.magnitude < maxFieldStrength &&
       E.magnitude > 0.000001 &&
-      iterations < maxIterations
+      iterations < config.maxIterations
     );
     return points;
   }
