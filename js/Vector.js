@@ -2,7 +2,10 @@ export default class Vector {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.magnitude = Math.hypot(x, y);
+  }
+
+  get magnitude() {
+    return Math.hypot(this.x, this.y);
   }
 
   static add(A, B) {

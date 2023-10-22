@@ -10,13 +10,20 @@ document.getElementById(config.appId).appendChild(canvas);
 const ctx = canvas.getContext("2d");
 ctx.fillStyle = "rgba(1,1,1,1)";
 const field = new Field();
+let currCharge = 1;
+document
+  .getElementById("charge-toggle")
+  .addEventListener("change", function () {
+    currCharge = currCharge * currCharge * -1;
+    console.log(currCharge);
+  });
 
 //report the mouse position on click
 canvas.addEventListener(
   "click",
   function (evt) {
     const { x, y } = getMousePos(canvas, evt);
-    const charge = new Charge(1, x, y);
+    const charge = new Charge(currCharge, x, y);
     field.charges.push(charge);
     update(field, ctx);
   },
@@ -42,6 +49,6 @@ function drawLine(points) {
   ctx.beginPath();
   ctx.moveTo(x, y);
   points.forEach((point) => ctx.lineTo(point.x, point.y));
-  ctx.lineWidth = 2;
+  ctx.lineWidth = config.strokeWidth;
   ctx.stroke();
 }

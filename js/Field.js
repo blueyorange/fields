@@ -28,14 +28,17 @@ export default class Field {
   }
 
   fieldLine(startPosition) {
-    // returns an array of points consituting the field line
+    const maxFieldStrength = 1.1 / config.chargeRadius ** 2;
+    // returns an array of points constituting the field line
     let position = startPosition;
     const points = [startPosition];
     var insideCanvas = true;
-    const maxIterations = 1000;
     let iterations = 0;
+    let maxIterations = 100000;
+    let E;
     // iterate following E direction to generate points
     do {
+      iterations++;
       insideCanvas = !Boolean(
         position.x < 0 ||
           position.x > config.width ||
@@ -43,14 +46,18 @@ export default class Field {
           position.y > config.height
       );
       // calculate the field strength at this point
-      const E = this.strength(position);
+      E = this.strength(position);
       // make E only one pixel long, to advance one pixel each step
-      E.normalise();
-      position = Vector.add(position, E);
+      const unitVector = E.normalise();
+      position = Vector.add(position, unitVector);
       iterations++;
       // add new point to array
       points.push(position);
-    } while (insideCanvas && iterations < maxIterations);
+    } while (
+      E.magnitude < maxFieldStrength &&
+      E.magnitude > 0.000001 &&
+      iterations < maxIterations
+    );
     return points;
   }
 
@@ -66,7 +73,7 @@ export default class Field {
     const n = 32;
     const angle = (2 * Math.PI) / n;
     const { x, y } = charge.position;
-    const r = 10;
+    const r = config.chargeRadius;
     const equallySpacedPoints = Array.from({ length: n }, (_, i) => {
       return new Vector(
         x + r * Math.cos(i * angle),
@@ -79,7 +86,7 @@ export default class Field {
     const sortedPointsByFieldStrength = equallySpacedPoints.sort((a, b) => {
       return this.strength(b).magnitude - this.strength(a).magnitude;
     });
-    return sortedPointsByFieldStrength.slice(0, 28);
+    return sortedPointsByFieldStrength.slice(0, 16);
   }
 
   fieldLines() {
