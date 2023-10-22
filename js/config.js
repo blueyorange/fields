@@ -5,4 +5,5 @@ export default {
   fieldLinesPerCharge: 8,
   chargeRadius: 5,
   strokeWidth: 3,
+  maxIterations: 10000,
 };
