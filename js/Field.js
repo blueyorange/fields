@@ -41,7 +41,6 @@ export default class Field {
       points.push(position);
     } while (
       E.magnitude < maxFieldStrength &&
-      E.magnitude > 0.000001 &&
       iterations < config.maxIterations
     );
     return points;
