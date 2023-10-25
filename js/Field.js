@@ -77,7 +77,13 @@ export default class Field {
   }
 
   fieldLines() {
-    return this.charges
+    const positiveCharges = this.charges.filter((charge) => charge.sign === 1);
+    const negativeCharges = this.charges.filter((charge) => charge.sign === -1);
+    const chargesToDrawLinesFrom =
+      positiveCharges.length >= negativeCharges.length
+        ? positiveCharges
+        : negativeCharges;
+    return chargesToDrawLinesFrom
       .map((charge) => this.fieldLinesFromCharge(charge))
       .flat();
   }
