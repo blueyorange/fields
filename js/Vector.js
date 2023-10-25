@@ -37,6 +37,10 @@ export default class Vector {
     return B;
   }
 
+  round() {
+    return new Vector(Math.floor(this.x), Math.floor(this.y));
+  }
+
   normalise() {
     if (this.magnitude !== 0) {
       const x = this.x / this.magnitude;
