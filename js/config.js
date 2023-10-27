@@ -6,4 +6,5 @@ export default {
   chargeRadius: 5,
   strokeWidth: 3,
   maxIterations: 10000,
+  error: 50,
 };
