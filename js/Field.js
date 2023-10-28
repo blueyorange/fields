@@ -14,22 +14,14 @@ export default class Field {
   }
 
   fieldLine(startPosition, direction) {
-    const maxFieldStrength = 1.1 / config.chargeRadius ** 2;
     // returns an array of points constituting the field line
     let position = startPosition;
     const points = [startPosition];
-    var insideCanvas = true;
     let iterations = 0;
     let E;
     // iterate following E direction to generate points
     do {
       iterations++;
-      insideCanvas = !Boolean(
-        position.x < 0 ||
-          position.x > config.width ||
-          position.y < 0 ||
-          position.y > config.height
-      );
       // calculate the field strength at this point
       E = this.strength(position);
       // make E only one pixel long, to advance one pixel each step
@@ -40,27 +32,27 @@ export default class Field {
       // add new point to array
       points.push(position);
     } while (
-      E.magnitude < maxFieldStrength &&
+      E.magnitude < config.maxFieldStrength &&
       iterations < config.maxIterations
     );
-    return points;
+    return direction === -1 ? points.reverse() : points;
   }
 
   fieldLinesFromCharge(charge) {
     // get start positions
     const startPositions = this.#getStartPoints(charge);
     // returns an array of arrays containing the field line points
-    const points = startPositions.map((position) =>
+    const lines = startPositions.map((position) =>
       this.fieldLine(position, charge.sign)
     );
-    return points;
+    return lines;
   }
 
   #getStartPoints(charge) {
     const n = config.fieldLinesPerCharge;
     const angle = (2 * Math.PI) / n;
     const { x, y } = charge.position;
-    const r = config.chargeRadius;
+    const r = config.chargeRadius + 1;
     const equallySpacedPoints = Array.from({ length: n }, (_, i) => {
       return new Vector(
         x + r * Math.cos(i * angle),
@@ -86,5 +78,15 @@ export default class Field {
     return chargesToDrawLinesFrom
       .map((charge) => this.fieldLinesFromCharge(charge))
       .flat();
+  }
+
+  #isInsideCanvas(position) {
+    // returns true if position is inside drawing area, or false otherwise
+    return (
+      position.x > 0 &&
+      position.x < config.width &&
+      position.y > 0 &&
+      position.y < config.height
+    );
   }
 }
