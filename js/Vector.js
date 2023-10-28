@@ -22,6 +22,12 @@ export default class Vector {
     return C;
   }
 
+  subtract(B) {
+    const x = this.x - B.x;
+    const y = this.y - B.y;
+    return new Vector(x, y);
+  }
+
   scale(factor) {
     const x = this.x * factor;
     const y = this.y * factor;

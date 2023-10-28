@@ -1,31 +1,22 @@
 import Vector from "./Vector.js";
 
 export default class Charge {
-  constructor(charge, x, y, colour) {
-    this.charge = charge;
-    this.sign = charge / Math.abs(charge);
+  constructor(sign, x, y) {
+    this.sign = sign;
     this.x = x;
     this.y = y;
     this.position = new Vector(x, y);
-    this.colour = colour || "#000000";
   }
 
-  potential({ x, y }) {
-    var dx = this.x - x;
-    var dy = this.y - y;
-    var r = Math.hypot(dx, dy);
-    var V = this.charge / r;
-    return V;
+  potential(point) {
+    const r = point.subtract(this.position);
+    return this.sign / r;
   }
 
-  field({ x, y }) {
-    var dx = this.x - x;
-    var dy = this.y - y;
-    var r = Math.hypot(dx, dy);
-    var E = this.charge / (r * r);
-    var Ex = (E * -dx) / r;
-    var Ey = (E * -dy) / r;
-    var E = new Vector(Ex, Ey);
-    return E;
+  field(point) {
+    const positionVector = point.subtract(this.position);
+    const unitVector = positionVector.normalise();
+    const r = positionVector.magnitude;
+    return unitVector.scale(this.sign / (r * r));
   }
 }

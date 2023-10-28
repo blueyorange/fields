@@ -18,21 +18,21 @@ export default class Field {
     let position = startPosition;
     const points = [startPosition];
     let iterations = 0;
-    let E;
+    let fieldStrength;
     // iterate following E direction to generate points
     do {
       iterations++;
       // calculate the field strength at this point
-      E = this.strength(position);
+      fieldStrength = this.strength(position);
       // make E only one pixel long, to advance one pixel each step
       // multiply by +1 or -1 depending on charge
-      const unitVector = E.normalise().scale(direction);
+      const unitVector = fieldStrength.normalise().scale(direction);
       position = Vector.add(position, unitVector);
       iterations++;
       // add new point to array
       points.push(position);
     } while (
-      E.magnitude < config.maxFieldStrength &&
+      fieldStrength.magnitude < config.maxFieldStrength &&
       iterations < config.maxIterations
     );
     return direction === -1 ? points.reverse() : points;
