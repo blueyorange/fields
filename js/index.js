@@ -15,7 +15,6 @@ document
   .getElementById("charge-toggle")
   .addEventListener("change", function () {
     currCharge = currCharge * -1;
-    console.log(currCharge);
   });
 
 //report the mouse position on click
