@@ -14,7 +14,7 @@ let currCharge = 1;
 document
   .getElementById("charge-toggle")
   .addEventListener("change", function () {
-    currCharge = currCharge * currCharge * -1;
+    currCharge = currCharge * -1;
     console.log(currCharge);
   });
 
