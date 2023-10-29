@@ -53,29 +53,16 @@ export default class Field {
     const angle = (2 * Math.PI) / n;
     const { x, y } = charge.position;
     const r = config.chargeRadius + 1;
-    const equallySpacedPoints = Array.from({ length: n }, (_, i) => {
+    return Array.from({ length: n }, (_, i) => {
       return new Vector(
         x + r * Math.cos(i * angle),
         y + r * Math.sin(i * angle)
       );
     });
-    if (this.charges.length == 1) {
-      return equallySpacedPoints;
-    }
-    const sortedPointsByFieldStrength = equallySpacedPoints.sort((a, b) => {
-      return this.strength(b).magnitude - this.strength(a).magnitude;
-    });
-    return sortedPointsByFieldStrength.slice(0, config.fieldLinesPerCharge);
   }
 
   fieldLines() {
-    const positiveCharges = this.charges.filter((charge) => charge.sign === 1);
-    const negativeCharges = this.charges.filter((charge) => charge.sign === -1);
-    const chargesToDrawLinesFrom =
-      positiveCharges.length >= negativeCharges.length
-        ? positiveCharges
-        : negativeCharges;
-    return chargesToDrawLinesFrom
+    return this.charges
       .map((charge) => this.fieldLinesFromCharge(charge))
       .flat();
   }
