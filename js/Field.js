@@ -14,6 +14,7 @@ export default class Field {
   }
 
   fieldLine(startPosition, direction) {
+    const maxFieldStrength = 1;
     // returns an array of points constituting the field line
     let position = startPosition;
     const points = [startPosition];

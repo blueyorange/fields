@@ -13,13 +13,6 @@ ctx.fillStyle = "rgba(1,1,1,1)";
 ctx.imageSmoothingEnabled = false;
 ctx.lineCap = "round";
 
-// set up svg
-const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-svg.setAttribute("width", config.width);
-svg.setAttribute("height", config.height);
-
-document.getElementById(config.appId).appendChild(svg);
-
 // initiate field
 const field = new Field();
 let currCharge = 1;
@@ -55,8 +48,6 @@ function getMousePos(canvas, evt) {
 function update(field, ctx) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   field.fieldLines().forEach(drawLine);
-  svg.innerHTML = "";
-  field.fieldLines().map(createBezierPath);
 }
 
 function drawLine(points) {
@@ -66,46 +57,4 @@ function drawLine(points) {
   points.forEach((point) => ctx.lineTo(point.x, point.y));
   ctx.lineWidth = config.strokeWidth;
   ctx.stroke();
-}
-
-async function createBezierPath(points) {
-  console.log("in createBezierPath");
-  console.log(points.length);
-  const numPoints = 20;
-  const reducedPoints = filterEquallySpaced(points, numPoints);
-  console.log(reducedPoints, reducedPoints.length);
-  const bezierCurve = new Bezier(reducedPoints);
-  console.log("created bezier");
-  const lut = bezierCurve.getLUT(100); // Adjust the number of points as needed
-
-  const pathData =
-    `M${points[0].x},${points[0].y}` +
-    lut.map((point) => `L${point.x},${point.y}`).join("");
-
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  path.setAttribute("d", pathData);
-  path.setAttribute("stroke", "black");
-  path.setAttribute("stroke-width", config.strokeWidth);
-  path.setAttribute("fill", "none");
-  svg.appendChild(path);
-}
-
-function filterEquallySpaced(arr, numEntries) {
-  if (numEntries <= 0) {
-    return [];
-  }
-
-  if (numEntries >= arr.length) {
-    return arr.slice(); // Return a shallow copy of the original array
-  }
-
-  const result = [];
-  const step = (arr.length - 1) / (numEntries - 1);
-
-  for (let i = 0; i < numEntries; i++) {
-    const index = Math.round(i * step);
-    result.push(arr[index]);
-  }
-
-  return result;
 }
